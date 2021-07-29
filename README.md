@@ -19,11 +19,11 @@
 
 ### 1 - Clonar proyecto 
 
-Clonar el repositorio desde el [siguiente link](https://github.com/luigi1036/luigi1036.github.io).
+Clonar el repositorio desde el [siguiente link](https://github.com/luigi1036/datawarehouse.git).
 
 Desde la consola con el siguiente link:
 
-`git clone https://github.com/luigi1036/luigi1036.github.io.git .`
+`git clone https://github.com/luigi1036/datawarehouse.git .`
 
 ### 2 - Instalación de dependencias 
 ```
