@@ -40,7 +40,6 @@ module.exports.buscarUsuario = async (objUsuario) => {
 module.exports.crearUsuario = async (objUsuario) => {
 
     const { usuario, nombre, apellido, email, password, telefono, direccion, admin } = objUsuario;
-    console.log(objUsuario)
     if (usuario) {
 
         query = "INSERT INTO usuarios ( nombre, apellido, email, password, telefono, direccion, admin, usuario) VALUES ( :nombre, :apellido, :email, :password, :telefono, :direccion, :admin, :usuario ) ";

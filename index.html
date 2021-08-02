@@ -37,6 +37,7 @@
                     </li>
                     <li class="nav-item btnContactos"><a class="nav-link" href="#">Contactos</a></li>
                     <li class="nav-item btnUsuarios"><a class="nav-link" href="#">Usuarios</a></li>
+                    <li class="nav-item btnCompanias"><a class="nav-link" href="#">Compañias</a></li>
                     <li class="nav-item btnPais"><a class="nav-link" href="#">Paises</a></li>
                 </ul>
             </div>
@@ -231,6 +232,13 @@
 
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
+                            <div class="input-group-text">Region</div>
+                        </div>
+                        <div class="selectNuevoRegionContacto"></div>
+                    </div>
+
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
                             <div class="input-group-text">Pais</div>
                         </div>
                         <div class="selectNuevoPaisContacto"></div>
@@ -238,10 +246,16 @@
 
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
+                            <div class="input-group-text">Ciudad</div>
+                        </div>
+                        <div class="selectNuevoCiudadContacto"></div>
+                    </div>
+
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
                             <div class="input-group-text">Compania</div>
                         </div>
-                        <input type="text" class="form-control nuevaCompaniaContacto" id="nuevaCompaniaContacto"
-                            placeholder="Compania">
+                        <div class="selectNuevoCompania"></div>
                     </div>
 
                     <div class="input-group mb-2 mr-sm-2">
@@ -329,17 +343,30 @@
 
                     <div class="input-group mb-2 mr-mb-2 ">
                         <div class="input-group-prepend">
+                            <div class="input-group-text mb-2">Region</div>
+                        </div>
+                        <div class="selectEditarRegionContacto"></div>
+                    </div>
+
+                    <div class="input-group mb-2 mr-mb-2 ">
+                        <div class="input-group-prepend">
                             <div class="input-group-text mb-2">Pais</div>
                         </div>
                         <div class="selectEditarPaisContacto"></div>
+                    </div>
+
+                    <div class="input-group mb-2 mr-mb-2 ">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text mb-2">Ciudad</div>
+                        </div>
+                        <div class="selectEditarCiudadContacto"></div>
                     </div>
 
                     <div class="input-group mb-2 mr-sm-2">
                         <div class="input-group-prepend">
                             <div class="input-group-text">Compania</div>
                         </div>
-                        <input type="text" class="form-control editarCompaniaContacto" id="editarCompaniaContacto"
-                            placeholder="Compania">
+                        <div class="selectEditarCompania"></div>
                     </div>
 
                     <div class="input-group mb-2 mr-sm-2">
@@ -543,7 +570,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="nuevoPais" tabindex="-1" role="dialog" aria-labelledby="nuevoPais"
+<div class="modal fade" id="nuevoPais" tabindex="-1" role="dialog" aria-labelledby="nuevoPais"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
         <div class="modal-content">
@@ -557,7 +584,7 @@
             <div class="modal-body">
                 <div class="input-group mb-3 mr-mb-3 lg-3">
                     <div class="input-group-prepend">
-                        <div class="input-group-text">Nombre</div>
+                        <div class="input-group-text">Region</div>
                     </div>
                     <input type="text" class="form-control nuevoNombrePais" id="nuevoNombrePais"
                         placeholder="Nombre" required>
@@ -565,7 +592,7 @@
 
                 <div class="input-group mb-2 mr-sm-2 lg-2">
                     <div class="input-group-prepend">
-                        <div class="input-group-text">Region</div>
+                        <div class="input-group-text">Pais</div>
                     </div>
                     <input type="text" class="form-control nuevoRegion" id="nuevoRegion"
                         placeholder="Region" required>
@@ -573,12 +600,40 @@
 
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
-                        <div class="input-group-text">Sub-Region</div>
+                        <div class="input-group-text">Ciudad</div>
                     </div>
                     <input type="text" class="form-control nuevoSubRegion" id="nuevoSubRegion"
                         placeholder="Region">
                 </div>
                 <button type="button" class="btn btn-success btnCrearPais">Crear Pais</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevaCompania" tabindex="-1" role="dialog" aria-labelledby="nuevaCompania"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-mb" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="nuevaCompania">Nueva Compañia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group mb-3 mr-mb-3 lg-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Nombre</div>
+                    </div>
+                    <input type="text" class="form-control nuevoNombreCompania" id="nuevoNombreCompania"
+                        placeholder="Nombre Compañia" required>
+                </div>
+                
+                <button type="button" class="btn btn-success btnCrearCompania">Crear Compañia</button>
 
             </div>
 
@@ -598,6 +653,7 @@
     <script type="text/javascript" src="/javascript/contactos.js"></script>
     <script type="text/javascript" src="/javascript/usuarios.js"></script>
     <script type="text/javascript" src="/javascript/paises.js"></script>
+    <script type="text/javascript" src="/javascript/companias.js"></script>
 
     <footer id="sticky-footer" class="py-1 bg-dark text-white-50">
         <div class="container text-center">

@@ -4,7 +4,7 @@ const btnRegistrar = document.querySelector('.btnRegistrar');
 const btnSalir = document.querySelector('.btnSalir');
 const btnUsuarios = document.querySelector('.btnUsuarios');
 const btnContactos = document.querySelector('.btnContactos');
-const btnCompanias = document.querySelector('.btnCompanias');
+const btnCompania = document.querySelector('.btnCompanias');
 const btnPais = document.querySelector('.btnPais');
 const contenidoMostrar = document.querySelector(".contenido_mostar");
 const btnBuscarContacto = document.querySelector(".btnBuscarContacto");
@@ -15,6 +15,7 @@ const btnCrearUsuario = document.querySelector(".btnCrearUsuario");
 const btnEditarUsuario = document.querySelector(".btnEditarUsuario");
 const btnCrearPais = document.querySelector(".btnCrearPais");
 const btnInicio = document.querySelector(".btnInicio");
+const btnCrearCompania = document.querySelector(".btnCrearCompania");
 
 
 const url = 'http://127.0.0.1:3001';
@@ -82,7 +83,9 @@ btnIngresar.addEventListener('click', async (e) => {
             $(".btnSalir").hide();
             $(".btnLogin").hide();
             $("#navbarResponsive ul li").show();
-
+            if(!ingreso.admin){
+                $(".btnUsuarios").hide();
+            }
             localStorage.setItem("Token", JSON.stringify(ingreso.token));
             localStorage.setItem("Usuario", JSON.stringify(usuario));
             localStorage.setItem("Admin", JSON.stringify(ingreso.admin));

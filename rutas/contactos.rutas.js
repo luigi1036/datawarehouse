@@ -7,6 +7,7 @@ module.exports = (app) => {
         try {
 
             const consultaContactos = await contactosServicios.mostrarContactos(req.body);
+            
             if (consultaContactos.length > 0) { res.status(200).json(consultaContactos); }
 
             else {
@@ -24,7 +25,6 @@ module.exports = (app) => {
         try {
 
             const consultaContactos = await contactosServicios.mostrarContactos(req.body);
-
             if (consultaContactos.length > 0) { res.status(200).json(consultaContactos); }
 
             else {

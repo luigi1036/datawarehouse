@@ -8,7 +8,6 @@ const getHtml = (contactos) => {
     }
 
     if (contactos.length > 0) {
-
         html = `<table class="table table-bordered table-hover dt-responsive tablas">
     <thead>
       <tr>
@@ -16,8 +15,9 @@ const getHtml = (contactos) => {
         <th scope="col">Apellido</th>
         <th scope="col">Email</th>
         <th scope="col">Telefono</th>
-        <th scope="col">Pais</th>
         <th scope="col">Region</th>
+        <th scope="col">Pais</th>
+        <th scope="col">Ciudad</th>
         <th scope="col">Compania</th>
         <th scope="col">Cargo</th>
         <th scope="col">Canal</th>`
@@ -38,8 +38,9 @@ const getHtml = (contactos) => {
          <td>${contacto.apellido}</td>
          <td>${contacto.email}</td>
          <td>${contacto.telefono}</td>
-         <td>${contacto.pais}</td>
          <td>${contacto.region}</td>
+         <td>${contacto.pais}</td>
+         <td>${contacto.ciudad}</td>
          <td>${contacto.compania}</td>
          <td>${contacto.cargo}</td>
          <td>`;
@@ -76,7 +77,6 @@ const getHtml = (contactos) => {
 
 }
 
-
 btnContactos.addEventListener('click', async (e) => {
     e.preventDefault();
     $(".inicio").hide();
@@ -84,7 +84,7 @@ btnContactos.addEventListener('click', async (e) => {
     divBusqueda.classList.add("divBusqueda");
     if (localStorage.getItem("Admin") == 'true') {
         divBusqueda.innerHTML += `
-    <div class="d-flex justify-content-center"><button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuevoContacto">Crear Contacto</button></div>`
+    <div class="d-flex justify-content-center"><button type="button" class="btn btn-success contacto" data-toggle="modal" data-target="#nuevoContacto">Crear Contacto</button></div>`
     }
     divBusqueda.innerHTML += `
       <form>
@@ -108,35 +108,82 @@ btnContactos.addEventListener('click', async (e) => {
     const divTabla = document.createElement("div");
     divTabla.classList.add("divTabla")
     contenidoMostrar.appendChild(divTabla);
-
-    const ext = '/paises/';
+    const extregion = '/paisesr/';
+    const extcompania = '/companias/';
     const cuerpo = {};
-
     const metodo = 'GET';
-
-    const paises = await fetcheo(url, ext, cuerpo, metodo);
-    const clase = ".selectNuevoPaisContacto";
-    const selector = document.querySelector(clase);
-    mostrarPaises(await paises, selector, clase);
-
-
+    let contacto = document.querySelector(".contacto");
+    const claseRegion = ".selectNuevoRegionContacto";
+    const selectorRegion = document.querySelector(claseRegion);
+    const claseCompania = ".selectNuevoCompania";
+    const selectorCompania = document.querySelector(claseCompania);
+    if (localStorage.getItem("Admin") == 'true') {
+        contacto.addEventListener("click", async (e)=>{
+            const regiones = await fetcheo(url, extregion, cuerpo, metodo);
+            const companias = await fetcheo(url, extcompania, cuerpo, metodo);
+            mostrarRegion(await regiones, selectorRegion, claseRegion);
+            buscarPais();
+            mostrarCompanias(await companias, selectorCompania, claseCompania);
+        });
+    }  
+    
 });
 
-function mostrarPaises(paises, selector, clase) {
+async function mostrarRegion(regiones, selector, claseRegion) {
+    if (claseRegion === ".selectNuevoRegionContacto") {
+        select = "<select class='selectpicker nuevoRegionContacto' id='nuevoRegionContacto' data-live-search='true' title='Elija Region...'>";
+        
+    } else {
 
-    if (clase === ".selectNuevoPaisContacto") {
+        select = "<select class='selectpicker editarRegionContacto' id='editarRegionContacto' data-live-search='true' title='Elija Region...'>";
 
-        select = "<select class='selectpicker nuevoPaisContacto' id='nuevoPaisContacto' data-live-search='true' title='Elija Pais...'>";
+    }
 
+    regiones.forEach((region) => {
+        select += `<option value="${region.idregion}">${region.nombre}</option>`;
+    });
+
+    select += "</select>"
+
+    selector.innerHTML = select;
+
+    $('#nuevoRegionContacto').html(select).selectpicker('refresh');
+    $('#editarRegionContacto').html(select).selectpicker('refresh');
+
+    
+
+};
+
+async function buscarPais(e){
+    let id;
+    let btnpaises = document.getElementById("nuevoRegionContacto");
+    btnpaises.addEventListener('change', async (e)=>{
+           id = document.getElementById("nuevoRegionContacto").value;
+           const clasePais = ".selectNuevoPaisContacto";
+           const selectorPais = document.querySelector(clasePais);
+        const metodo = 'POST';
+        const extpais = '/paisesp/';
+        cuerpo = {"id":id}
+        const paises = await fetcheo(url, extpais, cuerpo, metodo)
+        mostrarPais(await paises, selectorPais, clasePais);
+        buscarCiudad();
+    });
+        
+   
+};
+
+async function mostrarPais(paises, selector, clasePais) {
+    if (clasePais === ".selectNuevoPaisContacto") {
+        select = "<select class='selectpicker nuevoPaisContacto' id='nuevoPaisContacto' data-live-search='true' title='Elija otro...'>";
+        
     } else {
 
         select = "<select class='selectpicker editarPaisContacto' id='editarPaisContacto' data-live-search='true' title='Elija Pais...'>";
 
     }
 
-
     paises.forEach((pais) => {
-        select += `<option value="${pais.nombre}">${pais.nombre}</option>`;
+        select += `<option value="${pais.idpais}">${pais.nombre}</option>`;
     });
 
     select += "</select>"
@@ -145,6 +192,74 @@ function mostrarPaises(paises, selector, clase) {
 
     $('#nuevoPaisContacto').html(select).selectpicker('refresh');
     $('#editarPaisContacto').html(select).selectpicker('refresh');
+
+};
+
+async function buscarCiudad(e){
+    let id;
+    let btnpaises = document.getElementById("nuevoPaisContacto");
+    btnpaises.addEventListener('change', async (e)=>{
+        id = document.getElementById("nuevoPaisContacto").value;
+        const claseCiudad = ".selectNuevoCiudadContacto";
+        const selectorCiudad = document.querySelector(claseCiudad);
+        const metodo = 'POST';
+        const extciudad = '/paisesc/';
+        cuerpo = {"id":id}
+        const ciudades = await fetcheo(url, extciudad, cuerpo, metodo);
+        mostrarCiudad(await ciudades, selectorCiudad, claseCiudad);
+    });
+        
+        
+};
+
+async function mostrarCiudad(ciudades, selector, claseCiudad) {
+    if (claseCiudad === ".selectNuevoCiudadContacto") {
+        select = "<select class='selectpicker nuevoCiudadContacto' id='nuevoCiudadContacto' data-live-search='true' title='Elija otro...'>";
+        
+    } else {
+
+        select = "<select class='selectpicker editarCiudadContacto' id='editarCiudadContacto' data-live-search='true' title='Elija Pais...'>";
+
+    }
+
+    ciudades.forEach((ciudad) => {
+        select += `<option value="${ciudad.idciudad}">${ciudad.nombre}</option>`;
+    });
+
+    select += "</select>"
+
+    selector.innerHTML = select;
+
+    $('#nuevoCiudadContacto').html(select).selectpicker('refresh');
+    $('#editarCiudadContacto').html(select).selectpicker('refresh');
+
+    
+
+};
+
+async function mostrarCompanias(companias, selector, claseCompania) {
+    if (claseCompania === ".selectNuevoCompania") {
+        select = "<select class='selectpicker NuevoCompania' id='NuevoCompania' data-live-search='true' title='Elija Compañia...'>";
+        
+    } else {
+
+        select = "<select class='selectpicker editarCompania' id='editarCompania' data-live-search='true' title='Elija Pais...'>";
+
+    }
+
+    companias.forEach((compania) => {
+        select += `<option value="${compania.idcompania}">${compania.nombre}</option>`;
+    });
+
+    select += "</select>"
+
+    selector.innerHTML = select;
+
+    $('#NuevoCompania').html(select).selectpicker('refresh');
+    $('#editarCompania').html(select).selectpicker('refresh');
+
+    
+
 };
 
 
@@ -194,15 +309,15 @@ async function buscarContactos(e) {
 };
 
 btnCrearContacto.addEventListener('click', async (e) => {
-
     e.preventDefault();
-
     const nombre = document.querySelector('.nuevoNombreContacto').value;
     const apellido = document.querySelector('.nuevoApellidoContacto').value;
     const email = document.querySelector('.nuevoEmailContacto').value;
     const telefono = document.querySelector('.nuevoTelefonoContacto').value;
+    const region = document.querySelector('#nuevoRegionContacto').value;
     const pais = document.querySelector('#nuevoPaisContacto').value;
-    const compania = document.querySelector('.nuevaCompaniaContacto').value;
+    const ciudad = document.querySelector('#nuevoCiudadContacto').value;
+    const compania = document.querySelector('#NuevoCompania').value;
     const cargo = document.querySelector('.nuevoCargoContacto').value;
     const canal = document.querySelectorAll('#nuevoCanalContacto option:checked');
     const mapCanal = Array.from(canal).map(el => el.value);
@@ -216,12 +331,13 @@ btnCrearContacto.addEventListener('click', async (e) => {
             "apellido": apellido,
             "email": email,
             "telefono": telefono,
+            "region": region,
             "pais": pais,
+            "ciudad": ciudad,
             "compania": compania,
             "cargo": cargo,
             "canal_preferido": valCanal
         };
-
         const metodo = 'POST';
 
         let crearContacto = await fetcheo(url, ext, cuerpo, metodo);
@@ -254,7 +370,6 @@ btnCrearContacto.addEventListener('click', async (e) => {
 });
 
 async function vistaEditarContacto(e) {
-
     e.preventDefault();
 
     const idContacto = await e.target.attributes.idContacto.value;
@@ -268,39 +383,38 @@ async function vistaEditarContacto(e) {
     })
 
     try {
-
+        const extregion = '/paisesr/';
+        const extPais = '/paisesp/';
+        const extCiudad = '/paisesc/';
+        const extCompanias = '/companias/';
         const ext = '/contactosFiltro/';
         const cuerpo = {
             "id": idContacto
         };
-
+        let cuerpo2;
+        let id;
         const metodo = 'POST';
-
+        const metodos = 'GET';
         const traerContacto = await fetcheo(url, ext, cuerpo, metodo);
-
         if (traerContacto) {
-
-            const ext = '/paises/';
-            const cuerpo = {};
-
-            const metodo = 'GET';
-
-            const paises = await fetcheo(url, ext, cuerpo, metodo);
-            const clase = ".selectEditarPaisContacto";
-            const selector = document.querySelector(clase);
-
-            mostrarPaises(await paises, selector, clase);
+            const regiones = await fetcheo(url, extregion, cuerpo, metodos);
+            const claseRegion = ".selectEditarRegionContacto";
+            const selectorRegion = document.querySelector(claseRegion);
+            mostrarRegion(await regiones, selectorRegion, claseRegion);
+            consultarPais( regiones);
+            const compania = await fetcheo(url, extCompanias, cuerpo, metodos);
+            const claseCompania = ".selectEditarCompania";
+            const selectorCompania = document.querySelector(claseCompania);
+            mostrarCompanias(await compania, selectorCompania, claseCompania);
 
             const canalesPreferidos = traerContacto[0].canal_preferido.split(",");
-            const paisSeleccionado = traerContacto[0].pais;
 
             document.querySelector('.editarIdContacto').value = traerContacto[0].id;
             document.querySelector('.editarNombreContacto').value = traerContacto[0].nombre;
             document.querySelector('.editarApellidoContacto').value = traerContacto[0].apellido;
             document.querySelector('.editarEmailContacto').value = traerContacto[0].email;
             document.querySelector('.editarTelefonoContacto').value = traerContacto[0].telefono;
-            document.querySelector('.editarPaisContacto').value = traerContacto[0].pais;
-            document.querySelector('.editarCompaniaContacto').value = traerContacto[0].compania;
+            document.querySelector('.editarRegionContacto').value = traerContacto[0].region;
             document.querySelector('.editarCargoContacto').value = traerContacto[0].cargo;
             document.querySelectorAll('.editarCanalContacto option').forEach(o => {
 
@@ -310,18 +424,7 @@ async function vistaEditarContacto(e) {
 
                 }
 
-            })
-
-            document.querySelectorAll('.editarPaisContacto option').forEach(o => {
-
-                if (paisSeleccionado == o.value) {
-
-                    o.selected = "selected";
-                    o.html = o.value;
-
-                }
-
-            })
+            });
             $('select[name=selValue]').val(1); $('.selectpicker').selectpicker('refresh');
         } else if (traerContacto.error) { alert(traerContacto.error); }
 
@@ -377,7 +480,6 @@ async function eliminarContacto(e) {
 };
 
 btnEditarContacto.addEventListener('click', async (e) => {
-
     e.preventDefault();
 
     const id = document.querySelector('.editarIdContacto').value;
@@ -385,8 +487,10 @@ btnEditarContacto.addEventListener('click', async (e) => {
     const apellido = document.querySelector('.editarApellidoContacto').value;
     const email = document.querySelector('.editarEmailContacto').value;
     const telefono = document.querySelector('.editarTelefonoContacto').value;
+    const region = document.querySelector('#editarRegionContacto').value;
     const pais = document.querySelector('#editarPaisContacto').value;
-    const compania = document.querySelector('.editarCompaniaContacto').value;
+    const ciudad = document.querySelector('#editarCiudadContacto').value;
+    const compania = document.querySelector('#editarCompania').value;
     const cargo = document.querySelector('.editarCargoContacto').value;
     const canal = document.querySelectorAll('#editarCanalContacto option:checked');
     const mapCanal = Array.from(canal).map(el => el.value);
@@ -401,7 +505,9 @@ btnEditarContacto.addEventListener('click', async (e) => {
             "apellido": apellido,
             "email": email,
             "telefono": telefono,
+            "region": region,
             "pais": pais,
+            "ciudad": ciudad,
             "compania": compania,
             "cargo": cargo,
             "canal_preferido": valCanal
@@ -433,3 +539,37 @@ btnEditarContacto.addEventListener('click', async (e) => {
 
 
 });
+
+async function consultarPais(regiones){
+    let id;
+    let btnpaises = document.getElementById("editarRegionContacto");
+    btnpaises.addEventListener('change', async (e)=>{
+           id = document.getElementById("editarRegionContacto").value;
+           const clasePais = ".selectEditarPaisContacto";
+           const selectorPais = document.querySelector(clasePais);
+        const metodo = 'POST';
+        const extpais = '/paisesp/';
+        cuerpo = {"id":id}
+        const paises = await fetcheo(url, extpais, cuerpo, metodo)
+       mostrarPais(await paises, selectorPais, clasePais);
+       editarCiudad();
+    });
+    return id;
+};
+
+async function editarCiudad(e){
+    let id;
+    let btnpaises = document.getElementById("editarPaisContacto");
+    btnpaises.addEventListener('change', async (e)=>{
+        id = document.getElementById("editarPaisContacto").value;
+        const claseCiudad = ".selectEditarCiudadContacto";
+        const selectorCiudad = document.querySelector(claseCiudad);
+        const metodo = 'POST';
+        const extciudad = '/paisesc/';
+        cuerpo = {"id":id}
+        const ciudades = await fetcheo(url, extciudad, cuerpo, metodo);
+        mostrarCiudad(await ciudades, selectorCiudad, claseCiudad);
+    });
+        
+        
+};

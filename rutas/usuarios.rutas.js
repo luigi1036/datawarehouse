@@ -101,18 +101,14 @@ module.exports = (app) => {
             const usuBus = await usuariosServicios.buscarUsuario(req.body);
 
             if (usuBus.length > 0 && usuario == usuBus[0].usuario && password == usuBus[0].password) {
-
-                console.log("Enviando Token");
                 if (usuBus[0].admin == 1) {
                     usuBus[0].admin = true;
                 } else {
                     usuBus[0].admin = false;
                 }
-                console.log(usuBus[0].admin);
                 const informacion = { usuario: usuario, admin: usuBus[0].admin, id: usuBus[0].id };
                 const algoritmo = { algorithm: "HS512", expiresIn: 120000 }
                 const token = jwt.sign(informacion, firma, algoritmo);
-                console.log(informacion);
                 res.status(200).json({
                     mensaje: 'Autenticación correcta',
                     token: token,

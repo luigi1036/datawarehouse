@@ -12,21 +12,21 @@ const getHtmlPaises = (paises) => {
     html = `<table class="table table-bordered table-hover dt-responsive tablas">
     <thead>
       <tr>
-        <th scope="col">Nombre</th>
         <th scope="col">Region</th>
-        <th scope="col">Sub-Region</th>
+        <th scope="col">Pais</th>
+        <th scope="col">Ciudad</th>
       </tr>
     </thead>
     <tbody>
   `;
 
 
-    paises.forEach(usuario => {
+    paises.forEach(pais => {
 
       html += `<tr>
-         <td>${usuario.nombre}</td>
-         <td>${usuario.region}</td>
-         <td>${usuario.sub_region}</td>
+         <td>${pais.region}</td>
+         <td>${pais.pais}</td>
+         <td>${pais.ciudad}</td>
        </tr>`
 
     });
@@ -78,18 +78,18 @@ btnPais.addEventListener('click', async (e) => {
 btnCrearPais.addEventListener('click', async (e) => {
 
   e.preventDefault();
-  const nombre = document.querySelector('.nuevoNombrePais').value;
-  const region = document.querySelector('.nuevoRegion').value;
-  const sub_region = document.querySelector('.nuevoSubRegion').value;
+  const region = document.querySelector('.nuevoNombrePais').value;
+  const pais = document.querySelector('.nuevoRegion').value;
+  const ciudad = document.querySelector('.nuevoSubRegion').value;
 
 
   try {
 
     const ext = '/paises/';
     const cuerpo = {
-      "nombre": nombre,
       "region": region,
-      "sub_region": sub_region
+      "pais": pais,
+      "ciudad": ciudad
 
     };
     const metodo = 'POST';
